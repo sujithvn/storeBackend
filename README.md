@@ -1,5 +1,6 @@
-# svnMERNstore Backend
+## storeBackend (part of svnMERNstore) 
 
-Node Express MongoDB backend with Restful API for svnMERNstore
- works along with github.com/sujithvn/storeFrontend
+This is the backend application for svnMERNstore and is built using Node, Express, MongoDB with Restful API.
+It works along with github.com/sujithvn/storeFrontend
+
 ~ WIP ~
