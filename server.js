@@ -3,6 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/auth");
 
@@ -16,13 +18,16 @@ const DATABASE = process.env.DATABASE;
 //DB connectivity
 mongoose.connect(DATABASE, {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true
   })
   .then(() => console.log("Database connected"));
   
 
 // Middleware
 app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 

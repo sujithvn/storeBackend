@@ -1,13 +1,13 @@
 // Imports
 const express = require("express");
 
-const { test } = require("../controllers/auth");
+const { postRegister } = require("../controllers/auth");
 
 
 // Initialise
 const router = express.Router();
 
 // Routes for /api/auth
-router.get("/test", test);
+router.post("/register", postRegister);
 
 module.exports = router;
