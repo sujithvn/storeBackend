@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
+const authRoutes = require("./routes/auth");
+
 dotenv.config();
 
 // Initialise
@@ -22,12 +24,8 @@ mongoose.connect(DATABASE, {
 // Middleware
 app.use(morgan("dev"));
 
+app.use("/api/auth", authRoutes);
 
-
-// Server response
-app.get("/", (req, res) => {
-  res.send("Hello from NODEjs server");
-});
 
 app.listen(PORT, () => {
   console.log(`Server running & listening to port ${PORT}`);
