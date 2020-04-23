@@ -1,0 +1,11 @@
+{
+  "name": "storebackend",
+  "version": "1.0.0",
+  "description": "Node Express MongoDB backend with Restful API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sujithvn",
+  "license": "MIT"
+}
