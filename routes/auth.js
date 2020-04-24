@@ -1,6 +1,7 @@
 // Imports
 const express = require("express");
 
+const { userRegisterValidator } = require("../middlewares/validator");
 const { postRegister } = require("../controllers/auth");
 
 
@@ -8,6 +9,6 @@ const { postRegister } = require("../controllers/auth");
 const router = express.Router();
 
 // Routes for /api/auth
-router.post("/register", postRegister);
+router.post("/register", userRegisterValidator, postRegister);
 
 module.exports = router;
