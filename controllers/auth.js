@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken"); // to generate signed token
 const expressJwt = require("express-jwt"); // for autorization check
+const dotenv = require("dotenv");
 
+dotenv.config();
 const User = require("../models/user");
 
 exports.postRegister = (req, res) => {
@@ -49,4 +51,37 @@ exports.postLogin = (req, res) => {
 exports.getLogout = (req, res) => {
     res.clearCookie("t");
     res.json({message: "Signout success"});
+};
+
+exports.isLoggedin = expressJwt({
+    secret: process.env.JWT_SECRET,
+    userProperty: "authed"
+});
+
+exports.isAuth = (req, res, next) => {
+    let user = req.profile && req.authed && req.profile._id == req.authed._id;
+    if (!user) {
+      return res.status(403).json({
+        error: "Access Denied"
+      });
+    }
+    next();
+};
+  
+exports.isSeller = (req, res, next) => {
+    if (req.profile.role < 1) {
+        return res.status(403).json({
+        error: "Seller resource, access denied!"
+        });
+    }
+    next();
+};
+  
+exports.isAdmin = (req, res, next) => {
+    if (req.profile.role < 2) {
+        return res.status(403).json({
+        error: "Admin resource, access denied!"
+        });
+    }
+    next();
 };
