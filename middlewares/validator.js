@@ -41,3 +41,17 @@ exports.userRegisterValidator = (req, res, next) => {
     //next();
   };
   
+  exports.userLoginValidator = (req, res, next) => {
+    req.check("email")
+        .isEmail()
+        .withMessage("Invalid or empty eMail")
+        .normalizeEmail();
+    req.check("password", "Password is required field").notEmpty();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      const firsterror = errors.map(error => error.msg)[0];
+      return res.status(400).json({ error: firsterror });
+    }
+    next();
+  };
