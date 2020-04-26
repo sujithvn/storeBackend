@@ -1,4 +1,6 @@
 // Imports
+const path = require("path");
+
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
@@ -9,6 +11,9 @@ const expressValidator = require("express-validator");
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
+const categoryRoutes = require("./routes/category");
+const subcategoryRoutes = require("./routes/subcategory");
+const productRoutes = require("./routes/product");
 
 dotenv.config();
 
@@ -31,9 +36,13 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressValidator());
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/subcategory", subcategoryRoutes);
+app.use("/api/product", productRoutes);
 
 
 app.listen(PORT, () => {
