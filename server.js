@@ -4,6 +4,7 @@ const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -32,6 +33,7 @@ mongoose.connect(DATABASE, {
   
 
 // Middleware
+app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
