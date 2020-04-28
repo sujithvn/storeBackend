@@ -11,7 +11,7 @@ exports.productById = (req, res, next, id) => {
         error: "Product not found"
       });
     }
-    prod.photo =undefined;
+    // prod.photo =undefined;
     req.product = prod;
     next();
   });
@@ -19,6 +19,7 @@ exports.productById = (req, res, next, id) => {
 
 exports.getReadProduct = (req, res, next) => {
   if (req.profile.id == req.product.userid){
+    req.product.photo = undefined;
     return res.json(req.product);
   } else {
     return res.status(400).json({
@@ -182,4 +183,96 @@ exports.putProductUpdate = (req, res, next) => {
       return res.status(400).json({ error: firsterror });
     })
   });
+};
+
+exports.getListAllProducts = (req, res) => {
+  const order = req.query.order ? req.query.order : 'desc';
+  const sortBy = req.query.sortBy ? req.query.sortBy : 'updatedAt';
+  const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 3;
+  const query = {active: true};
+
+  Product.find(query)
+    .select("-photo")
+    .populate({path: "subcategory", select: "name", populate: { path: "category", select: "name"}})
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, prodList) => {
+      if (err) {
+        return res.status(400).json({ error: err });
+      }
+      res.send(prodList);
+    });
+};
+
+
+exports.getListAllRelProducts = (req, res) => {
+  const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 3;
+  const query = {_id: {$ne: req.product}, subcategory: req.product.subcategory, active: true};
+
+  Product.find(query)
+    .select("-photo")
+    .limit(limit)
+    .populate({path: "subcategory", select: "name", populate: { path: "category", select: "name"}})
+    .exec((err, relProdList) => {
+      if (err) {
+        return res.status(400).json({ error: err });
+      } else if (relProdList.length == 0) {
+        return res.status(400).json({ error: "No related products" });
+      }
+      res.send(relProdList);
+    });    
+};
+
+
+exports.postSearchList = (req, res) => {
+    const order = req.body.order ? req.body.order : "desc";
+    const sortBy = req.body.sortBy ? req.body.sortBy : "updatedAt";
+    const limit = parseInt(req.body.limit) ? parseInt(req.body.limit) : 10;
+    const skip = parseInt(req.body.skip) ? parseInt(req.body.skip): 0;
+    let findArgs = {};
+
+    for (let key in req.body.filters) {
+      if (req.body.filters[key].length > 0) {
+            if (key === "price") {
+                  findArgs[key] = {
+                    $gte: req.body.filters[key][0],
+                    $lte: req.body.filters[key][1]
+                  };
+            } else {
+              findArgs[key] = req.body.filters[key];
+            }
+          }
+        }
+
+    findArgs["active"] = true;
+    
+    Product.find(findArgs)
+        .select("-photo")
+        .populate({path: "subcategory", select: "name", populate: { path: "category", select: "name"}})
+        .sort([[sortBy, order]])
+        .skip(skip)
+        .limit(limit)
+        .exec((err, prods) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            res.json({
+                size: prods.length,
+                prods
+            });
+      });
+};
+
+
+exports.getPhoto = (req, res, next) => {
+
+  if (req.product.photo.data) {
+    res.set("Content-Type", req.product.photo.contentType);
+    return res.send(req.product.photo.data);
+  }
+
+  next();
+
 };
