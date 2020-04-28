@@ -17,6 +17,7 @@ const categorySchema = new mongoose.Schema(
     userid: {
       type: ObjectId,
       ref: 'User',
+      trim: true,
       required: true
     }
   },

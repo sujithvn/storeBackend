@@ -149,7 +149,7 @@ exports.putProductUpdate = (req, res, next) => {
         let product = req.product;
         product = _.extend(product, fields);
 
-        product.userid = req.params.userId;
+        // product.userid = req.params.userId;  // ideally, userid should not be changed during update
         if (files.photo) {
           if (files.photo.size > 1000000) {
             return res.status(400).json({ error: "Image should be less than 1Mb" });

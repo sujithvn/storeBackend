@@ -23,6 +23,7 @@ const productSchema = new mongoose.Schema(
     subcategory: {
       type: ObjectId,
       ref: "SubCategory",
+      trim: true,
       required: true
     },
     quantity: {
@@ -36,8 +37,9 @@ const productSchema = new mongoose.Schema(
       contentType: String
     },
     photopath: {
-        type: String
-    },
+        type: String,
+        trim: true
+      },
     shipping: {
       type: Boolean,
       required: false
@@ -50,6 +52,7 @@ const productSchema = new mongoose.Schema(
     userid: {
         type: ObjectId,
         ref: 'User',
+        trim: true,
         required: true
       }  
   },

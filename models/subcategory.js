@@ -17,11 +17,13 @@ const subcategorySchema = new mongoose.Schema(
     category: {
       type: ObjectId,
       ref: 'Category',
+      trim: true,
       required: true
     },
     userid: {
       type: ObjectId,
       ref: 'User',
+      trim: true,
       required: true
     }
   },
