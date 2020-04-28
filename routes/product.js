@@ -1,7 +1,7 @@
 // Imports
 const express = require("express");
 
-const { productById, postProductCreate, getReadProduct, putProductUpdate, deleteProduct } = require("../controllers/product");
+const { productById, postProductCreate, getReadProduct, putProductUpdate, deleteProduct, deactivateProduct } = require("../controllers/product");
 const { isLoggedin, isAuth, isSeller } = require("../controllers/auth");
 const { userById } = require("../controllers/user");
 
@@ -23,5 +23,6 @@ router.get("/read/:productId/:userId", getReadProduct);
 router.put("/update/:productId/:userId", isLoggedin, isAuth, isSeller, putProductUpdate);
 
 router.delete("/delete/:productId/:userId", isLoggedin, isAuth, isSeller, deleteProduct);
+router.put("/deactivate/:productId/:userId", isLoggedin, isAuth, isSeller, deactivateProduct);
 
 module.exports = router;

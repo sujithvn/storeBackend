@@ -28,13 +28,26 @@ exports.getReadProduct = (req, res, next) => {
 };
 
 exports.deleteProduct = (req, res, next) => {
-  Product.findOneAndDelete({_id: req.product.id, userid: req.profile.id}, (err, result) => {
+  // Product.findOneAndDelete({_id: req.product.id, userid: req.profile.id}, (err, result) => {
+  //   if (err) {
+  //     return res.status(400).json({
+  //       error: err
+  //     });
+  //   }
+  //   res.json({message: `Product deleted successfully: ${result.product.name}`});
+  // });
+  res.status(400).json({error: `Please Deactivate instead of deleting product`});
+};
+
+exports.deactivateProduct = (req, res, next) => {
+  Product.findOneAndUpdate({_id: req.product.id, userid: req.profile.id},
+                           {active: false}, {new: true, useFindAndModify: false}, (err, result) => {
     if (err) {
       return res.status(400).json({
         error: err
       });
     }
-    res.json({message: `Product deleted successfully: ${result.product.name}`});
+    res.json({message: `Product deactivated successfully: ${result.name}`});
   });
 };
 
@@ -71,7 +84,7 @@ exports.postProductCreate = (req, res, next) => {
     .then(msgs => {
       if (!msgs) {
         let product = new Product(fields);
-        product.userid = req.params.userId;
+        product.userid = req.profile.id;
         if (files.photo) {
           if (files.photo.size > 1000000) {
             return res.status(400).json({ error: "Image should be less than 1Mb" });
